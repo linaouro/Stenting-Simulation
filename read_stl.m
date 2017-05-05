@@ -1,4 +1,4 @@
-function [fout, vout, cout] = read_stl(filename, draw)
+function [fout, vout, cout] = read_stl(filename)
 % taken from CAD2MATDEMO http://www.mathworks.com/matlabcentral/fileexchange/3642-cad2matdemo-m
 % Reads CAD STL ASCII files, which most CAD programs can export.
 % Used to create Matlab patches of CAD 3D data.
@@ -69,20 +69,3 @@ vout = v';  % "
 cout = c';
 %
 fclose(fid);
-if draw
-    clf;
-    p = patch('faces', fout, 'vertices' ,vout);
-    set(p, 'facec', 'r');              % Set the face color (force it)
-    %set(p, 'facec', 'flat');            % Set the face color flat
-    set(p, 'FaceVertexCData', cout);    % Set the color (from file)
-    set(p, 'facealpha',.7)             % Use for transparency
-    set(p, 'EdgeColor','none');         % Set the edge color
-    %set(p, 'EdgeColor',[1 0 0 ]);      % Use to see triangles, if needed.
-    light                               % add a default light
-    daspect([1 1 1])                    % Setting the aspect ratio
-    view(3)                             % Isometric view
-    xlabel('X'),ylabel('Y'),zlabel('Z')
-    title(['Imported CAD data from ' filename])
-    drawnow                             %, axis manual
-    %
-end

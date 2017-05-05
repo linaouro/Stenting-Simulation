@@ -8,7 +8,7 @@ hold on;
 [ center_coords1, center_tangent1 ] = read_path( 'test_path1.pth' );
 [ center_coords2, center_tangent2 ] = read_path( 'test_path2.pth' );
 draw_centerline(center_coords1)
-centers = [center_coords1; center_coords2(2:end)];
+centers = [center_coords1; center_coords2];
 
 % find bifurcation point
 [~,bif_1,bif_2] = intersect(center_coords1,center_coords2,'rows');
