@@ -1,6 +1,6 @@
-function draw_artery(vertices, faces)
+function draw_artery(arteryObj)
     clf;
-    p = patch('faces', faces, 'vertices' ,vertices);
+    p = patch('faces', arteryObj.faces, 'vertices' ,arteryObj.vertices);
     set(p, 'facec', 'r');              % Set the face color (force it)
     set(p, 'facealpha',.7)             % Use for transparency
     set(p, 'EdgeColor','none');         % Set the edge color

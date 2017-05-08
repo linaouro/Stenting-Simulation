@@ -1,31 +1,18 @@
-%% 1. Read in artery.stl (and possibly display)
-[faces, vertices, ~] = read_stl('test_artery.stl', true);
-
+%% 1. Artery setup
+arteryObj = Artery('test_artery.stl','test_path1.pth', 'test_path2.pth');
 % display artery
-draw_artery(vertices, faces)
-hold on; 
-% read in centerline
-[ center_coords1, center_tangent1 ] = read_path( 'test_path1.pth' );
-[ center_coords2, center_tangent2 ] = read_path( 'test_path2.pth' );
-draw_centerline(center_coords1)
-centers = [center_coords1; center_coords2(2:end)];
+draw_artery(arteryObj);
+hold on;
+% display centerline
+draw_centerline(arteryObj.centerline)
 
-% find bifurcation point
-[~,bif_1,bif_2] = intersect(center_coords1,center_coords2,'rows');
+% for debugging: check if closest points are realistic
+% draw_closest_points(arteryObj.centerline.coords,arteryObj.vertices, arteryObj.centerline.index_artery_to_center,79);
 
+%% 2. Stent setup 
+stentObj = Stent('s_stent.obj','stent_foreshortening.csv');
 
-% compute radii
-
-%% 2. Read in stent
-[stent_V,stent_F] = read_vertices_and_faces_from_obj_file('s_stent.obj', false);
-
-%% 3. Stenosis detection
-
-%% 4. Stent placement
-% stent scaling
-
-
-%% 5. Stenting
+%% 3. Intervention
 % stent expansion and foreshortening
 
 % possibly smoothing with smooth3
