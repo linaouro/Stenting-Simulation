@@ -1,22 +1,17 @@
-function [left_coords, right_coords, trunk_coords, left_tangents, right_tangents, trunk_tangents] = get_centerlines(filename1, filename2)
+function [centerline] = get_centerlines(filename1, filename2)
     [coords1, tangents1]= read_path( filename1 );
     [coords2, tangents2]= read_path( filename2 );
     
     [~,bif1,bif2] = intersect(coords1,coords2,'rows');
+   
     
     if bif1 == 1
-       left_coords = coords1(2:end,:); 
-       left_tangents = tangents1(2:end,:);
-       right_coords = coords2(bif2+1:end,:);
-       right_tangents = tangents2(bif2+1:end,:);
-       trunk_coords = coords2(1:bif2,:);
-       trunk_tangents = coords2(1:bif2,:);
+       centerline(1) = Centerline(coords1(2:end,:), tangents1(2:end,:));
+       centerline(2) = Centerline(coords2(bif2+1:end,:),tangents2(bif2+1:end,:));
+       centerline(3) = Centerline(coords2(1:bif2,:), coords2(1:bif2,:));
     else
-       left_coords = coords2(2:end,:); 
-       left_tangents = tangents2(2:end,:);
-       right_coords = coords1(bif1+1:end,:);
-       right_tangents = tangents1(bif1+1:end,:);
-       trunk_coords = coords1(1:bif1,:);
-       trunk_tangents = coords1(1:bif1,:);
-        
+       centerline(1) = Centerline(coords2(2:end,:), tangents2(2:end,:));
+       centerline(2) = Centerline(coords1(bif1+1:end,:),tangents1(bif1+1:end,:));
+       centerline(3) = Centerline(coords1(1:bif1,:), coords1(1:bif1,:));    
     end
+    centerline(4) = Centerline([centerline(1).coords; centerline(2).coords; centerline(3).coords],[centerline(1).tangents; centerline(2).tangents; centerline(3).tangents]);
