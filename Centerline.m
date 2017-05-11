@@ -6,6 +6,7 @@ classdef Centerline
         coords;
         tangents;
         index_artery_to_center;
+        seglen;
     end
     
     methods
@@ -13,6 +14,7 @@ classdef Centerline
             if nargin == 2
                 centerlineObj.coords = coords;
                 centerlineObj.tangents = tangents;
+                centerlineObj.seglen = sqrt(sum(diff(centerlineObj.coords,[],1).^2,2));
             end
          end
         
