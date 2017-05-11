@@ -1,3 +1,4 @@
 function draw_centerline(centerlineObj)
-plot3(centerlineObj.coords1(:,1),centerlineObj.coords1(:,2),centerlineObj.coords1(:,3), 'Color', 'k');
-plot3(centerlineObj.coords2(:,1),centerlineObj.coords2(:,2),centerlineObj.coords2(:,3), 'Color', 'k');
+for i = 1:3
+    plot3(centerlineObj(i).coords(:,1),centerlineObj(i).coords(:,2),centerlineObj(i).coords(:,3), 'Color', 'k');
+end
