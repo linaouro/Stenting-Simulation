@@ -16,6 +16,7 @@ classdef Artery
         function  arteryObj = Artery(filename_artery, filename_centerline1, filename_centerline2)
             % read in artery
             [arteryObj.faces, arteryObj.vertices, ~] = read_stl(filename_artery);
+           
             % initialize centerline
             arteryObj.centerline = get_centerlines(filename_centerline1, filename_centerline2);
             arteryObj.centerline_lengths = [1,size(arteryObj.centerline(1).coords,1)-1,size(arteryObj.centerline(2).coords,1)-1,size(arteryObj.centerline(3).coords,1)];

@@ -3,7 +3,7 @@ classdef Stent
     
     properties
         centerline;
-        radii;
+        radius;
         vertices;
         faces; 
         params;
@@ -15,20 +15,21 @@ classdef Stent
                 
                 % read in stent
                 %[stentObj.faces, stentObj.vertices] = read_vertices_and_faces_from_obj_file(filename_stent, false);
-
+                
+                % set foreshortening parameters
+                stentObj.params = csvread(filename_params);
+                
                 % initialize centerline
                 stentObj.centerline = Centerline(coords(idx(1):idx(2),:), tangents(idx(1):idx(2),:));
 
-                % set foreshortening parameters
-                stentObj.params = csvread(filename_params);
-
                 stentObj.vertices = initial_alignment(stentObj.centerline, radius, 50);
                 stentObj.faces = triangulate_stent(stentObj.vertices,50);
-                %TODO find intersection of the cylinders polyxpoly to find
-                %intersection of polylines
+                %TODO find intersection of the cylinders 
+                
+                stentObj.radius = radius;
             end
         end
-        
+             
 
  
     end

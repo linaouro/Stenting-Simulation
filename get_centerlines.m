@@ -27,7 +27,7 @@ function [centerline] = get_centerlines(filename1, filename2)
     [coords,tangents,~]= interparc(size(coords2(bif:end,:),1),coords2(bif:end,1),coords2(bif:end,2),coords2(bif:end,3));
     centerline(2) = Centerline(coords,tangents); % left
     [coords,tangents,~]= interparc(size(coords2(1:bif,:),1),coords2(1:bif,1),coords2(1:bif,2),coords2(1:bif,3));
-    centerline(3) = Centerline(coords,tangents); % trunk
+    centerline(3) = Centerline(coords(end:-1:1,:),tangents(end:-1:1,:)); % trunk
 
 % %% two big centerlines plus trunk
 %     [coords,tangents,~] = interparc(size(coords1,1)+size(coords2(1:bif-1,:),1),[coords2(1:bif-1,1);coords1(:,1)],[coords2(1:bif-1,2);coords1(:,2)],[coords2(1:bif-1,3);coords1(:,3)]);

@@ -21,7 +21,7 @@ stent = ones(size(circle,1)*size(centerline.coords,1),4);
 
 for i = 0:size(centerline.coords,1)-1
     stent(i*n+1:i*n+n,:) = (get_rot_trans_matrix([0;1;0],centerline.tangents(i+1,:)', centerline.coords(i+1,:)')* circle')';
-    line(stent(i*n+1:i*n+n,1), stent(i*n+1:i*n+n,2), stent(i*n+1:i*n+n,3),  'LineWidth',2,'Color', 'k'); hold on;
+    %line(stent(i*n+1:i*n+n,1), stent(i*n+1:i*n+n,2), stent(i*n+1:i*n+n,3),  'LineWidth',2,'Color', 'k'); hold on;
 end;
 
 stent(:,4)=[];
