@@ -1,4 +1,4 @@
-function [stent] = initial_alignment(centerline, lumen_stent)
+function [stent] = initial_alignment(centerline, lumen_stent,n)
 %length_segments = cumsum(seglen(down:up-1));
 %length_stent = length_segments(end);
 % [up,down,stent_centerline]=createCenterline_new1(centerspline,round((up+down)/2),length_stent,min(stent_V(:,2))*length_stent/(max(stent_V(:,2))-min(stent_V(:,2))),seglen);
@@ -13,7 +13,7 @@ function [stent] = initial_alignment(centerline, lumen_stent)
 % new_stent_V=stent_V*scaling_matrix;
 % s_stent_V = new_stent_V;
 
-n = 50;
+
 angles = linspace(0,2*pi,n) ;
 circle = [0.5*lumen_stent*cos(angles); zeros(size(angles)) ;  0.5*lumen_stent*sin(angles); ones(size(angles)) ]';
 stent = ones(size(circle,1)*size(centerline.coords,1),4);
@@ -24,6 +24,7 @@ for i = 0:size(centerline.coords,1)-1
     line(stent(i*n+1:i*n+n,1), stent(i*n+1:i*n+n,2), stent(i*n+1:i*n+n,3),  'LineWidth',2,'Color', 'k'); hold on;
 end;
 
+stent(:,4)=[];
 % 
 % for j =1:size(circle,1)
 %     cylinder(j,:) = [circle(j,1) 0 circle(j,2)];
