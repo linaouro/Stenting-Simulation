@@ -1,36 +1,54 @@
 addpath('draw/')
+addpath('geom3d/')
 %% 1. Artery setup
 %arteryObj = Artery('test_artery.stl','test_path1.pth', 'test_path2.pth');
-%load('arteryObj_HSJ003.mat');
-% display artery
+
+% display artery, centerline and stenoses
+figure;
 draw_artery(arteryObj);
 hold on;
-% display centerline
 draw_centerline(arteryObj.centerline)
+draw_stenoses(arteryObj.stenosis);
 
 % for debugging: check if closest points are realistic
-% draw_closest_points(arteryObj.centerline.coords,arteryObj.vertices, arteryObj.centerline.index_artery_to_center,79);
+%draw_closest_points(arteryObj.centerline(1).coords,arteryObj.vertices, arteryObj.centerline(1).index_artery_to_center,1);
 
 %% 2. Stent setup 
 % set stent lenghts automatically
-%stent_idx_trunk = [max(1,arteryObj.stenosis(3).index-1/6*(arteryObj.centerline(3).len-arteryObj.stenosis(3).index)),arteryObj.centerline(3).len];
-stent_idx_trunk = [1,min(arteryObj.centerline(3).len,uint8(1.5*arteryObj.stenosis(3).index))];
-stent_idx_left = [1,min(arteryObj.centerline(2).len,uint8(1.5*arteryObj.stenosis(2).index))];
-stent_idx_right = [1,min(arteryObj.centerline(1).len,uint8(1.5*arteryObj.stenosis(1).index))];
+stent_idx_trunk = min(arteryObj.centerline(3).len,uint8(1.5*arteryObj.stenosis(3).index));
+stent_idx_left = min(arteryObj.centerline(2).len,uint8(1.5*arteryObj.stenosis(2).index));
+stent_idx_right = min(arteryObj.centerline(1).len,uint8(1.5*arteryObj.stenosis(1).index));
 
-stentY(3) = Stent('s_stent.obj','stent_foreshortening_trunk.csv', arteryObj.centerline(3).coords, arteryObj.centerline(3).tangents, 1.3,stent_idx_trunk);
-stentY(2) = Stent('s_stent.obj','stent_foreshortening_branches1.csv', arteryObj.centerline(2).coords, arteryObj.centerline(2).tangents, 0.6,stent_idx_left);
-stentY(1) = Stent('s_stent.obj','stent_foreshortening_branches1.csv', arteryObj.centerline(1).coords, arteryObj.centerline(1).tangents, 0.6, stent_idx_right);
+% create final stent
+stentY(3) = Stent('stent_foreshortening_branches1.csv', arteryObj.centerline(3), 0.65,stent_idx_trunk);
+stentY(2) = Stent('stent_foreshortening_branches2.csv', arteryObj.centerline(2), 0.3,stent_idx_left);
+stentY(1) = Stent('stent_foreshortening_branches2.csv', arteryObj.centerline(1), 0.3, stent_idx_right);
 
+% create initial stent
 [stentInitial] = initial_stent_from_final(arteryObj, stentY);
 
-%% 3. Intervention
-% draw stenoses
-draw_stenoses(arteryObj.stenosis);
-draw_stent(stentY,50, 'k')
-draw_stent(stentInitial,50, 'c')
-% stent expansion and foreshortening
+% draw artery and inital stent
+draw_artery(arteryObj);
+hold on;
+drawMesh(stentInitial(1).vertices, stentInitial(1).faces, 'FaceColor', 'w');
+drawMesh(stentInitial(3).vertices, stentInitial(3).faces, 'FaceColor', 'w');
+drawMesh(stentInitial(2).vertices, stentInitial(2).faces, 'FaceColor', 'w');
 
-% final stent
-% arteryObj.set_stents();
+% draw artery and final stent
+figure;
+draw_artery(arteryObj); hold on;
+drawMesh(stentY(1).vertices, stentY(1).faces, 'FaceColor', 'w');
+drawMesh(stentY(3).vertices, stentY(3).faces, 'FaceColor', 'w');
+drawMesh(stentY(2).vertices, stentY(2).faces, 'FaceColor', 'w');
+
+%% 3. Intervention
+% create expanded artery
+arteryObj_new = arteryObj;
+arteryObj_new.vertices = set_artery_to_stent(arteryObj_new.vertices, arteryObj_new.dist_to_center(:,4), stentY);
+
+%draw expanded artery
+figure
+draw_artery(arteryObj_new)
+hold on
+
 % possibly smoothing with smooth3
