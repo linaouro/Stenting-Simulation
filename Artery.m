@@ -20,7 +20,7 @@ classdef Artery
            
             % initialize centerline
             arteryObj.centerline = get_centerlines(filename_centerline1, filename_centerline2);
-            arteryObj.centerline_lengths = [1,size(arteryObj.centerline(1).coords,1)-1,size(arteryObj.centerline(2).coords,1)-1,size(arteryObj.centerline(3).coords,1)];
+            arteryObj.centerline_lengths = [0,size(arteryObj.centerline(1).coords,1),size(arteryObj.centerline(2).coords,1),size(arteryObj.centerline(3).coords,1)];
             
             % calculate radii and distances
             arteryObj = calc_radii_dists(arteryObj);
@@ -52,10 +52,11 @@ classdef Artery
             end;
 
             % set values for the single branches 
+
             for i = 1:3
-                arteryObj.radii_avg(1:arteryObj.centerline_lengths(i+1),i) = arteryObj.radii_avg(centerline_lengths1(i):centerline_lengths1(i+1)-1,4);            
-                arteryObj.centerline(i).index_artery_to_center(1:arteryObj.centerline_lengths(i+1),:) = arteryObj.centerline(4).index_artery_to_center(centerline_lengths1(i):centerline_lengths1(i+1)-1,:);            
-                arteryObj.dist_to_center(1:arteryObj.centerline_lengths(i+1),i) = arteryObj.dist_to_center(centerline_lengths1(i):centerline_lengths1(i+1)-1,4);            
+                arteryObj.radii_avg(1:arteryObj.centerline_lengths(i+1),i) = arteryObj.radii_avg(centerline_lengths1(i)+1:centerline_lengths1(i+1),4);            
+                arteryObj.centerline(i).index_artery_to_center(1:arteryObj.centerline_lengths(i+1),:) = arteryObj.centerline(4).index_artery_to_center(centerline_lengths1(i)+1:centerline_lengths1(i+1),:);            
+                arteryObj.dist_to_center(1:arteryObj.centerline_lengths(i+1),i) = arteryObj.dist_to_center(centerline_lengths1(i)+1:centerline_lengths1(i+1),4);            
             end
         end
         
