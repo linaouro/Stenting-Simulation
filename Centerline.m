@@ -15,7 +15,7 @@ classdef Centerline
         function centerlineObj = Centerline(coords, tangents) 
             if nargin == 2
                 centerlineObj.coords = coords;
-                centerlineObj.tangents = tangents;
+                centerlineObj.tangents = normr(tangents);
                 centerlineObj.seglen = sqrt(sum(diff(centerlineObj.coords,[],1).^2,2));
                 centerlineObj.len = size(coords,1);
             end
