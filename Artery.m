@@ -10,6 +10,7 @@ classdef Artery
         faces; 
         stenosis;
         dist_to_center;
+        opening;
 
     end
     
@@ -25,8 +26,11 @@ classdef Artery
             % calculate radii and distances
             arteryObj = calc_radii_dists(arteryObj);
             
-            % set stenosis
+            % set stenoses
             arteryObj = set_stenosis(arteryObj);
+            
+            % set openings
+            arteryObj = set_opening(arteryObj);
         end
 
         function arteryObj = calc_radii_dists(arteryObj)
@@ -61,15 +65,25 @@ classdef Artery
         end
         
         function arteryObj = set_stenosis(arteryObj)
-            arteryObj.stenosis = [Stenosis(),Stenosis(),Stenosis()];
+            arteryObj.stenosis = [arteryPoint(),arteryPoint(),arteryPoint()];
             offset = 10;
             for i = 1:3
                 [radius, index] = min(arteryObj.radii_avg(1:arteryObj.centerline_lengths(i+1)-offset,i));
                 % set Stenosis
-                arteryObj.stenosis(i) = Stenosis(radius,index, arteryObj.centerline(i).coords(index,:));  
+                arteryObj.stenosis(i) = arteryPoint(radius,index, arteryObj.centerline(i).coords(index,:));  
             end
     
         end 
+        
+        function arteryObj = set_opening(arteryObj)
+            arteryObj.opening = [arteryPoint(),arteryPoint()];
+            for i = 1:2
+                threshold = 0.4*(max(arteryObj.radii_avg(:,i))+min(arteryObj.radii_avg(nnz(arteryObj.radii_avg(:,i)),i)));
+                idx = find(arteryObj.radii_avg(:,i)<threshold,1);
+                arteryObj.opening(i) = arteryPoint(arteryObj.radii_avg(idx,i), idx, arteryObj.centerline(i).coords(idx,:));
+            end
+        end
+
         
 
         
