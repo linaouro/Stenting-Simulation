@@ -13,12 +13,12 @@ offset2 = size(stentFinal(3).vertices,1);
 
 %% 1 to 3 and 2 to 3
 for i = 1:51
-   idxbmin13(i) = mod(bmin13-13+i,50);
+   idxbmin13(i) = mod(bmin13-13+i,n_circ);
    if (idxbmin13(i) == 0)
-       idxbmin13(i)=50;
+       idxbmin13(i)=n_circ;
    end
 
-   idx_inner(i) = mod(bmin23-12-i,50);
+   idx_inner(i) = mod(bmin23-12-i,n_circ);
 
    if i > 1 && i < 27
        stentY.faces(end+1,:) = [idx1((idxbmin13(i-1)))+offset;idx3(idxbmin13(i-1)); idx3(idxbmin13(i)); idx1((idxbmin13(i)))+offset];
@@ -30,7 +30,7 @@ for i = 1:51
 end
 
 %% 1 to 2
-idx_inner(idx_inner == 0) = 50;
+idx_inner(idx_inner == 0) = n_circ;
 idx1_inner = idx_inner(end:-1:1);
 for i = 1:26
    if i > 1
