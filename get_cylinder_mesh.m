@@ -28,10 +28,8 @@ for i=1:nz
     lz = ones(size(lx))*seglen(i);
     trans   = localToGlobal3d(coords(i,:), theta, phi, 0);
     [x(i,:), y(i,:), z(i,:)] = transformPoint3d(lx', ly', lz', trans);
-    %scatter3(x(i,1),y(i,1),z(i,1), 'r'); hold on;
-    %scatter3(x(i,2:end-1),y(i,2:end-1),z(i,2:end-1), 'b'); hold on;
 end
 
 % convert to FV mesh
-[vertices, faces] = surfToMesh(x, y, z, 'xPeriodic', true);
-%drawMesh(vertices, faces, 'FaceColor', 'w','facealpha',.1);
+[vertices, faces] = surfToMesh1(x, y, z, 'xPeriodic', true);
+drawMesh(vertices, faces, 'FaceColor', 'w','facealpha',.1);
