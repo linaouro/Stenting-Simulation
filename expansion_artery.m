@@ -3,7 +3,6 @@ global n_circ;
 
 steps = 10;
 resistance= 0.4;
-%TODO include foreshortening
 
 % go through stent vertices
 for i = 1:3
@@ -20,7 +19,7 @@ for i = 1:3
     % artery points belonging to each stent points
     index_artery_to_stent = get_index(index_stent_to_artery',size(stentObj(i).vertices,1))  ;
                  
-    for s=1:steps+5 %TODO change this condition
+    for s=1:steps 
         for ii = 1:stentObj(i).centerline.len
             % indices of one circle
             idx = (ii-1)*n_circ+1:(ii)*n_circ;
@@ -47,7 +46,6 @@ for i = 1:3
                 % (almost always == ii+1)
                 [~, idx_c_t_a] = pdist2(stentObj(i).centerline.coords, relevant_vertices(index_artery_to_circle(mm),:),'euclidean','SMALLEST',1);
                 relevant_vertices(index_artery_to_circle(mm),:) = arteryObj.centerline(i).coords(idx_c_t_a,:)+stentObj(i).radius(index_artery_to_circle_stent(mm)).* normr(relevant_vertices(index_artery_to_circle(mm),:) - arteryObj.centerline(i).coords(idx_c_t_a,:));
-                %scatter3(relevant_vertices(idx_a_t_s1(mm),1),relevant_vertices(idx_a_t_s1(mm),2),relevant_vertices(idx_a_t_s1(mm),3));
             end
 
         end
@@ -66,7 +64,7 @@ for i = 1:3
     arteryObj.vertices(relevant_idx,:) = relevant_vertices;
         
 end
-%hold on; draw_stent(stentObj, 'r');
+
 
 
 
