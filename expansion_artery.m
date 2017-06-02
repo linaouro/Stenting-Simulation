@@ -6,13 +6,15 @@ resistance= 0.4;
 %TODO include foreshortening
 
 % go through stent vertices
-for i = 1:1
+for i = 1:3
     radius_curr = mean(stentObj(i).radius_avg);
     d = (radius_final(i)-mean(radius_curr))/steps;
+    initial_length = stentObj(i).centerline.length;
     
     % artery vertices in vicinity of stentObj i
-    relevant_vertices = arteryObj.vertices(stentObj(i).centerline.index_artery_to_center(stentObj(i).centerline.index_artery_to_center~=0),:);
-    relevant_distances = arteryObj.dist_to_center(stentObj(i).centerline.index_artery_to_center(stentObj(i).centerline.index_artery_to_center~=0),:);
+    relevant_idx = stentObj(i).centerline.index_artery_to_center(stentObj(i).centerline.index_artery_to_center~=0);
+    relevant_vertices = arteryObj.vertices(relevant_idx,:);
+    relevant_distances = arteryObj.dist_to_center(relevant_idx,:);
     % closest stent point to each artery point
     [~, index_stent_to_artery] = pdist2( stentObj(i).vertices, relevant_vertices,'euclidean','SMALLEST',1);
     % artery points belonging to each stent points
@@ -36,31 +38,35 @@ for i = 1:1
                 % artery points belonging to current circle
                 index_artery_to_circle = index_artery_to_stent(idx,:);
                 index_artery_to_circle = index_artery_to_circle(index_artery_to_circle~=0);
-                
                 % artery points belonging to stent points (current circle)
                 index_artery_to_circle_stent = index_stent_to_artery(index_artery_to_circle);
                 % artery points (belonging to circle points) that are
                 % closer to the centerline than the expanded circle point
                 mm = stentObj(i).radius(index_artery_to_circle_stent) > relevant_distances(index_artery_to_circle,4);
-                % TODO check which centerline the artery points belonged to
-                % before
-                [~, idx_c_t_a] = pdist2( stentObj(i).centerline.coords, relevant_vertices(index_artery_to_circle(mm),:),'euclidean','SMALLEST',1);
+                % index of closest centerline point to artery points
+                % (almost always == ii+1)
+                [~, idx_c_t_a] = pdist2(stentObj(i).centerline.coords, relevant_vertices(index_artery_to_circle(mm),:),'euclidean','SMALLEST',1);
                 relevant_vertices(index_artery_to_circle(mm),:) = arteryObj.centerline(i).coords(idx_c_t_a,:)+stentObj(i).radius(index_artery_to_circle_stent(mm)).* normr(relevant_vertices(index_artery_to_circle(mm),:) - arteryObj.centerline(i).coords(idx_c_t_a,:));
                 %scatter3(relevant_vertices(idx_a_t_s1(mm),1),relevant_vertices(idx_a_t_s1(mm),2),relevant_vertices(idx_a_t_s1(mm),3));
-                %[~,idx_closest_artery] = pdist2( relevant_vertices(idx_a_t_s1(mm),:),stentObj(i).vertices, 'euclidean','SMALLEST',1);
-                %rel_distances = relevant_distances(idx_a_t_s1(mm),:);
-                %stentObj(i).radius_artery(idx_closest_artery(idx_closest_artery~=0)) = rel_distances(idx_closest_artery,4);%mean(relevant_distances(index_artery_to_stent(index_artery_to_stent~=0)));
-
             end
 
         end
-  
+        % check for foreshortening
+        stentObj(i).radius_avg = mean(stentObj(i).radius);
+        scale = interp1(stentObj(i).params(:,1), stentObj(i).params(:,2), stentObj(i).radius_avg*2,'linear','extrap') ; % initial radius * 2 /2 -> params are lumen
+        if isnan(scale) || scale > 1 
+            scale = 1;
+        elseif scale < 0
+                scale = 0.1;
+        end
+        truncat_idx = find(cumsum(stentObj(i).centerline.seglen)>initial_length*scale,1,'first')+1;
+        stentObj(i) = truncate_stent(stentObj(i),truncat_idx);
     end
     % update artery vertices
-    arteryObj.vertices(stentObj(i).centerline.index_artery_to_center(stentObj(i).centerline.index_artery_to_center~=0),:) = relevant_vertices;
+    arteryObj.vertices(relevant_idx,:) = relevant_vertices;
         
 end
 %hold on; draw_stent(stentObj, 'r');
 
-%TODO add that artery expands also in direction radial
+
 
