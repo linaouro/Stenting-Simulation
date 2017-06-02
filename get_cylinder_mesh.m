@@ -32,4 +32,4 @@ end
 
 % convert to FV mesh
 [vertices, faces] = surfToMesh1(x, y, z, 'xPeriodic', true);
-drawMesh(vertices, faces, 'FaceColor', 'w','facealpha',.1);
+
