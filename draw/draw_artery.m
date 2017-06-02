@@ -1,4 +1,5 @@
 function draw_artery(arteryObj)
+    figure
     clf;
     p = patch('faces', arteryObj.faces, 'vertices' ,arteryObj.vertices);
     set(p, 'facec', 'r');              % Set the face color (force it)
@@ -7,6 +8,6 @@ function draw_artery(arteryObj)
     %set(p, 'EdgeColor',[1 0 0 ]);      % Use to see triangles, if needed.
     light                               % add a default light
     daspect([1 1 1])                    % Setting the aspect ratio
-    view(3)                             % Isometric view
+    view([230 60])                      
     xlabel('X'),ylabel('Y'),zlabel('Z')
     drawnow                             %, axis manual
