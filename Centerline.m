@@ -9,6 +9,7 @@ classdef Centerline
         index_stent_to_center;
         seglen;
         len;
+        length;
     end
     
     methods
@@ -18,6 +19,7 @@ classdef Centerline
                 centerlineObj.tangents = normr(tangents);
                 centerlineObj.seglen = sqrt(sum(diff(centerlineObj.coords,[],1).^2,2));
                 centerlineObj.len = size(coords,1);
+                centerlineObj.length = sum(centerlineObj.seglen);
             end
         end
         
