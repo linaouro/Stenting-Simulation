@@ -1,7 +1,10 @@
 function stentObj = set_stent_artery_radii(arteryObj, stentObj)
+%SET_STENT_ARTERY_RADII Sets for each stent point the radius of the artery
+%points belonging to it (x closest points)
     for i=1:3
         %TODO calculate with intersection instead of closest points
-        %TODO split artery in  3 parts to have relevant vertices right away
+        %TODO split artery in  3 parts to have relevant vertices right
+        %away?
         % artery vertices in vicinity of stentObj i
         relevant_vertices = arteryObj.vertices(stentObj(i).centerline.index_artery_to_center(stentObj(i).centerline.index_artery_to_center~=0),:);
         relevant_distances = arteryObj.dist_to_center(stentObj(i).centerline.index_artery_to_center(stentObj(i).centerline.index_artery_to_center~=0),4);

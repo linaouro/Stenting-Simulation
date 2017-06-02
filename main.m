@@ -71,5 +71,7 @@ drawMesh(stentExp(1).vertices, stentExp(1).faces, 'FaceColor', 'w','facealpha',.
 drawMesh(stentExp(3).vertices, stentExp(3).faces, 'FaceColor', 'w','facealpha',.0);
 drawMesh(stentExp(2).vertices, stentExp(2).faces, 'FaceColor', 'w','facealpha',.0);
 
+%TODO eerywhere i calculate closest to artery add the unique as in
+%set_stent_artery_radii
 
 % possibly smoothing with smooth3
