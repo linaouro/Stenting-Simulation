@@ -13,7 +13,9 @@ function stentObj = truncate_stent(stentObj,index)
 %
 % parts of the code taken from removeVerticesPatch by Lane Foulks
 global n_circ;
-
+if (isempty(index) ||isnan(index) || (index > (stentObj.centerline.len+1)))
+    return
+end
 removeVerticeList = (index*n_circ+1:length(stentObj.vertices));
 fnew = stentObj.faces;
 
@@ -36,8 +38,9 @@ stentObj.centerline.index_stent_to_center(index:end,:)=[];
 stentObj.centerline.coords(index:end,:)=[];
 stentObj.centerline.tangents(index:end,:)=[];
 stentObj.centerline.index_artery_to_center(index:end,:)=[];
-stentObj.centerline.seglen(index-1:end,:) = 0;
+stentObj.centerline.seglen(index-1:end,:) = [];
 stentObj.centerline.len = index-1;
+stentObj.centerline.length = sum(stentObj.centerline.seglen);
 %% Delete faces
 [IndexFacesRowDelete,~] = find(ismember(fnew,removeVerticeList)); % find the position (rows) of the faces to delete
 fnew(IndexFacesRowDelete,:) = []; % deletes faces that reference any vertice removed
