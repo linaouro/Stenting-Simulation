@@ -21,6 +21,11 @@ classdef Artery
             % remove duplicate vertices
             [arteryObj.vertices, ~, ic] =  unique(arteryObj.vertices, 'rows');
             arteryObj.faces = ic(arteryObj.faces);
+            
+            %a = arteryObj.vertices;
+            arteryObj=smoothpatch(arteryObj,1,1,1,1);    
+           % distance = norm(a-arteryObj.vertices)
+
             % initialize centerline
             arteryObj.centerline = get_centerlines(filename_centerline1, filename_centerline2);
             arteryObj.centerline_lengths = [0,size(arteryObj.centerline(1).coords,1),size(arteryObj.centerline(2).coords,1),size(arteryObj.centerline(3).coords,1)];
