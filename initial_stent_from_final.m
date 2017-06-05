@@ -10,5 +10,5 @@ for i = 1:3
     end
     scale = 1 / scale;
     initial_length = min(arteryObj.centerline(i).len, round(scale*stentObj(i).centerline.len));
-    stentObj(i) = Stent(stentObj(i).filename_params, arteryObj.centerline(i), ones(arteryObj.centerline(i).len,1)*stentObj(i).params(1,1)/2, initial_length);
+    stentObj(i) = Stent(stentObj(i).filename_params, arteryObj.centerline(i), ones(1,arteryObj.centerline(i).len)*stentObj(i).params(1,1)/2, initial_length);
 end

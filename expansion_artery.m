@@ -60,11 +60,10 @@ for i = 1:3
         truncat_idx = find(cumsum(stentObj(i).centerline.seglen)>initial_length*scale,1,'first')+1;
         stentObj(i) = truncate_stent(stentObj(i),truncat_idx);
     end
+    
     % update artery vertices
     arteryObj.vertices(relevant_idx,:) = relevant_vertices;
-        
+    
 end
-
-
 
 
