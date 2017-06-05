@@ -1,5 +1,5 @@
-function draw_artery(arteryObj)
-    figure
+function f=draw_artery(arteryObj)
+    f = figure;
     clf;
     p = patch('faces', arteryObj.faces, 'vertices' ,arteryObj.vertices);
     set(p, 'facec', 'r');              % Set the face color (force it)
