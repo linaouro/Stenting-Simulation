@@ -19,22 +19,26 @@ classdef Stent
                 global n_circ;
                 % read in stent
                 %[stentObj.faces, stentObj.vertices] = read_vertices_and_faces_from_obj_file(filename_stent, false);
-             
+                for i =1:length(idx)
                                
-                % set foreshortening parameters
-                stentObj.params = csvread(filename_params);
-                stentObj.filename_params = filename_params;
-                
-                % initialize centerline
-                stentObj.centerline = Centerline(centerline.coords(1:idx,:), centerline.tangents(1:idx,:));
-                stentObj.centerline.index_artery_to_center = centerline.index_artery_to_center(1:idx,:);
-                
-                [stentObj.radius, stentObj.vertices, stentObj.faces] = get_cylinder_mesh(stentObj.centerline, n_circ, idx, radii);                
-                %drawMesh(stentObj.vertices, stentObj.faces, 'FaceColor', 'w','facealpha',.1);
-                %plot3(stentObj.centerline.coords(:,1),stentObj.centerline.coords(:,2),stentObj.centerline.coords(:,3), 'Color', 'y'); hold on;
-                stentObj.centerline.index_stent_to_center = reshape(1:size(stentObj.vertices,1), n_circ,stentObj.centerline.len)';
-                
-                stentObj.radius_avg = mean(radii);
+                    if size(radii,1) == 1
+                        radii_stent = ones(idx(i),1).*radii(i);
+                    else
+                        radii_stent = radii(i,:);
+                    end
+                    % set foreshortening parameters
+                    stentObj(i).params = csvread(filename_params(i));
+                    stentObj(i).filename_params = filename_params(i);
+
+                    % initialize centerline
+                    stentObj(i).centerline = Centerline(centerline(i).coords(1:idx(i),:), centerline(i).tangents(1:idx(i),:));
+                    stentObj(i).centerline.index_artery_to_center = centerline(i).index_artery_to_center(1:idx(i),:);
+
+                    [stentObj(i).radius, stentObj(i).vertices, stentObj(i).faces] = get_cylinder_mesh(stentObj(i).centerline, n_circ, idx(i), radii_stent);                
+                     stentObj(i).centerline.index_stent_to_center = reshape(1:size(stentObj(i).vertices,1), n_circ,stentObj(i).centerline.len)';
+
+                    stentObj(i).radius_avg = mean(radii_stent);
+                end
             end
         end
         
