@@ -1,0 +1,13 @@
+function f=draw_artery_real_stents(arteryObj, stentObj)
+view([230 60])
+f=draw_artery(arteryObj); hold on;
+stentObj = get_real_stent(stentObj);
+for i = 1:size(stentObj,2)
+    trisurf(stentObj(i).faces_real,stentObj(i).vertices_real(:,1), stentObj(i).vertices_real(:,2),stentObj(i).vertices_real(:,3),...
+    'FaceColor', [0.8784 0.8785 0.8588], ...
+    'FaceAlpha', 1, ...
+    'EdgeColor', 'none', ...
+    'EdgeAlpha', 0);
+ hold on;
+    %drawMesh(stentObj(i).vertices, stentObj(i).faces, 'FaceColor', 'w','facealpha',.0);
+end
