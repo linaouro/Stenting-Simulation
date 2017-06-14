@@ -19,13 +19,22 @@ function [centerline] = get_centerlines(filename1, filename2)
 %     centerline(2) = Centerline(coords2(bif+1:end,:),tangents2(bif+1:end,:)); % left
 %     centerline(3) = Centerline(coords2(bif-1:-1:1,:),tangents2(bif:-1:1,:)); % trunk
     
+%     [coords,tangents,~] = interparc(size(coords1,1)-1,coords1(2:end,1),coords1(2:end,2),coords1(2:end,3));
+%     centerline(1) = Centerline(coords(2:end,:),tangents(2:end,:)); % right
+%     [coords,tangents,~]= interparc(size(coords2(bif+1:end,:),1),coords2(bif+1:end,1),coords2(bif+1:end,2),coords2(bif+1:end,3));
+%     centerline(2) = Centerline(coords(2:end,:),tangents(2:end,:)); % left
+%     [coords,tangents,~]= interparc(bif+1,coords2(1:bif,1),coords2(1:bif,2),coords2(1:bif,3));
+%     centerline(3) = Centerline(coords(end:-1:1,:),tangents(end:-1:1,:)); % trunk    
+%     centerline(3).tangents(1,:) = tangents2(end,:);
+    
     [coords,tangents,~] = interparc(size(coords1,1)-1,coords1(2:end,1),coords1(2:end,2),coords1(2:end,3));
-    centerline(1) = Centerline(coords(2:end,:),tangents(2:end,:)); % right
+    centerline(1) = Centerline(coords(1:end,:),tangents(1:end,:)); % right
     [coords,tangents,~]= interparc(size(coords2(bif+1:end,:),1),coords2(bif+1:end,1),coords2(bif+1:end,2),coords2(bif+1:end,3));
-    centerline(2) = Centerline(coords(2:end,:),tangents(2:end,:)); % left
-    [coords,tangents,~]= interparc(bif-1,coords2(1:bif-1,1),coords2(1:bif-1,2),coords2(1:bif-1,3));
+    centerline(2) = Centerline(coords(1:end,:),tangents(1:end,:)); % left
+    [coords,tangents,~]= interparc(bif+1,coords2(1:bif,1),coords2(1:bif,2),coords2(1:bif,3));
     centerline(3) = Centerline(coords(end:-1:1,:),tangents(end:-1:1,:)); % trunk    
-
+    centerline(3).tangents(1,:) = mean([centerline(3).tangents(1,:); centerline(1).tangents(1,:); centerline(2).tangents(1,:)]);
+    
 %% each centerline single up to bifurcation only trunk including bifurcation
 %     [coords,tangents,~] = interparc(round(size(coords1,1)),coords1(:,1),coords1(:,2),coords1(:,3));
 %     centerline(1) = Centerline(coords(2:end,:),tangents(2:end,:)); % right
