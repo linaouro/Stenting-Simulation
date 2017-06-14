@@ -5,6 +5,7 @@ classdef Artery
         centerline;
         centerline_lengths;
         radii_avg;
+        radii_min;
         radii_st_dev;
         vertices;
         faces; 
@@ -60,13 +61,16 @@ classdef Artery
                 dists = arteryObj.dist_to_center(arteryObj.centerline(4).index_artery_to_center(i,1:num),4);
                 arteryObj.radii_avg(i,4) = sum(dists)/num;
                 arteryObj.radii_st_dev(i,4) = std(dists);
+                arteryObj.radii_min(i,4) = min(dists);
             end;
 
             % set values for the single branches 
 
             for i = 1:3
                 arteryObj.radii_avg(1:arteryObj.centerline_lengths(i+1),i) = arteryObj.radii_avg(centerline_lengths1(i)+1:centerline_lengths1(i+1),4);            
-                arteryObj.centerline(i).index_artery_to_center(1:arteryObj.centerline_lengths(i+1),:) = arteryObj.centerline(4).index_artery_to_center(centerline_lengths1(i)+1:centerline_lengths1(i+1),:);            
+                arteryObj.radii_min(1:arteryObj.centerline_lengths(i+1),i) = arteryObj.radii_min(centerline_lengths1(i)+1:centerline_lengths1(i+1),4);            
+                
+                arteryObj.centerline(i).index_artery_to_center = arteryObj.centerline(4).index_artery_to_center(centerline_lengths1(i)+1:centerline_lengths1(i+1),:);            
                 arteryObj.dist_to_center(1:arteryObj.centerline_lengths(i+1),i) = arteryObj.dist_to_center(centerline_lengths1(i)+1:centerline_lengths1(i+1),4);            
             end
         end
@@ -91,16 +95,41 @@ classdef Artery
             end
         end
 
-        
+        function arteryObj = update_centerline(arteryObj, stent_radii)
+            global n_circ;
+            %update centerline
+            % parametrisation on x
+            nx = n_circ+1;
+            nz = 2;
+            t = linspace(0, 2*pi, nx);
+            x = zeros(nz,nx);
+            y = zeros(nz,nx);
+            z = zeros(nz,nx);
+            for i=1:nz 
+                lx = stent_radii(i) * cos(t);
+                sintheta = sin(t); sintheta(end) = 0;
+                ly = stent_radii(i) * sintheta;
+                % rotation of circle
+                [theta, phi, ~] = cart2sph2d(arteryObj.centerline(i).tangents(1,:));
+                lz = zeros(size(lx));
+                trans   = localToGlobal3d(arteryObj.centerline(i).coords(1,:), theta, phi, 0);
+                [x(i,:), y(i,:), z(i,:)] = transformPoint3d(lx', ly', lz', trans);
+            end
+            [D,I] = pdist2([x(1,:)', y(1,:)',z(1,:)'],[x(2,:)', y(2,:)',z(2,:)'], 'Euclidean','Largest',1);
+            [~,idx2] = max(D);
+            idx1 = I(idx2);
+
+
+
+            coords = [mean([x(1,idx1)', y(1,idx1)',z(1,idx1)';x(2,idx2)', y(2,idx2)',z(2,idx2)']); arteryObj.centerline(3).coords ];
+            tangents = [mean([arteryObj.centerline(1).tangents(1,:);arteryObj.centerline(2).tangents(1,:)]); arteryObj.centerline(3).tangents ];
+            arteryObj.centerline(3) = Centerline(coords, tangents);
+            arteryObj.centerline(4) = Centerline([arteryObj.centerline(1).coords; arteryObj.centerline(2).coords; arteryObj.centerline(3).coords],[arteryObj.centerline(1).tangents; arteryObj.centerline(2).tangents; arteryObj.centerline(3).tangents]);
+            arteryObj.centerline_lengths = [0,size(arteryObj.centerline(1).coords,1),size(arteryObj.centerline(2).coords,1),size(arteryObj.centerline(3).coords,1)];
+            arteryObj = calc_radii_dists(arteryObj); 
+         end
 
         
     end
-        
-        
-
-        
-                  
- 
-
     
 end
