@@ -97,8 +97,7 @@ classdef Artery
 
         function arteryObj = update_centerline(arteryObj, stent_radii)
             global n_circ;
-            %update centerline
-            % parametrisation on x
+            % take the first two branch stent circles 
             nx = n_circ+1;
             nz = 2;
             t = linspace(0, 2*pi, nx);
@@ -115,14 +114,16 @@ classdef Artery
                 trans   = localToGlobal3d(arteryObj.centerline(i).coords(1,:), theta, phi, 0);
                 [x(i,:), y(i,:), z(i,:)] = transformPoint3d(lx', ly', lz', trans);
             end
+            % get the two most distant points
             [D,I] = pdist2([x(1,:)', y(1,:)',z(1,:)'],[x(2,:)', y(2,:)',z(2,:)'], 'Euclidean','Largest',1);
             [~,idx2] = max(D);
             idx1 = I(idx2);
-
-
-
+            % calculate center and add to trunk centerline
             coords = [mean([x(1,idx1)', y(1,idx1)',z(1,idx1)';x(2,idx2)', y(2,idx2)',z(2,idx2)']); arteryObj.centerline(3).coords ];
             tangents = [mean([arteryObj.centerline(1).tangents(1,:);arteryObj.centerline(2).tangents(1,:)]); arteryObj.centerline(3).tangents ];
+%             arteryObj.centerline(1) = Centerline(arteryObj.centerline(1).coords(arteryObj.opening(1).index:end,:), arteryObj.centerline(1).tangents(arteryObj.opening(1).index:end,:));
+%             arteryObj.centerline(2) = Centerline(arteryObj.centerline(2).coords(arteryObj.opening(2).index:end,:), arteryObj.centerline(2).tangents(arteryObj.opening(2).index:end,:));
+%             
             arteryObj.centerline(3) = Centerline(coords, tangents);
             arteryObj.centerline(4) = Centerline([arteryObj.centerline(1).coords; arteryObj.centerline(2).coords; arteryObj.centerline(3).coords],[arteryObj.centerline(1).tangents; arteryObj.centerline(2).tangents; arteryObj.centerline(3).tangents]);
             arteryObj.centerline_lengths = [0,size(arteryObj.centerline(1).coords,1),size(arteryObj.centerline(2).coords,1),size(arteryObj.centerline(3).coords,1)];
