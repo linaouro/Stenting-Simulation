@@ -1,7 +1,16 @@
-function draw_stent(stentObj,c)
-global n_circ;
-for j = 1:3
-    for i = 0:stentObj(j).centerline.len-1
-        line(stentObj(j).vertices(i*n_circ+1:i*n_circ+n_circ,1), stentObj(j).vertices(i*n_circ+1:i*n_circ+n_circ,2), stentObj(j).vertices(i*n_circ+1:i*n_circ+n_circ,3),  'LineWidth',1,'Color', c); hold on;
-    end;
+function draw_stent(stentObj)
+
+for i = 1:3
+        p = patch('faces', stentObj(i).faces, 'vertices' ,stentObj(i).vertices);
+        set(p, 'facec', 'w');              % Set the face color (force it)
+        set(p, 'facealpha',.5)             % Use for transparency
+        set(p, 'EdgeColor','black');         % Set the edge color
+        %set(p, 'EdgeColor',[1 0 0 ]);      % Use to see triangles, if needed.
+        light('Position',[-1.0,-1.0,100.0],'Style','infinite');
+        lighting gouraud;
+        axis equal;
+        daspect([1 1 1])                    % Setting the aspect ratio
+        view([60 130])                      
+        xlabel('X'),ylabel('Y'),zlabel('Z')
+        drawnow                             %, axis manual
 end
