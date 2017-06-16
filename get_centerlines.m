@@ -32,7 +32,7 @@ function [centerline] = get_centerlines(filename1, filename2)
     [coords,tangents,~]= interparc(size(coords2(bif+1:end,:),1),coords2(bif+1:end,1),coords2(bif+1:end,2),coords2(bif+1:end,3));
     centerline(2) = Centerline(coords(1:end,:),tangents(1:end,:)); % left
     [coords,tangents,~]= interparc(bif+1,coords2(1:bif,1),coords2(1:bif,2),coords2(1:bif,3));
-    centerline(3) = Centerline(coords(end:-1:1,:),tangents(end:-1:1,:)); % trunk    
+    centerline(3) = Centerline(coords(end:-1:1,:),-tangents(end:-1:1,:)); % trunk    
     centerline(3).tangents(1,:) = mean([centerline(3).tangents(1,:); centerline(1).tangents(1,:); centerline(2).tangents(1,:)]);
     
 %% each centerline single up to bifurcation only trunk including bifurcation
