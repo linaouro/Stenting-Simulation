@@ -4,7 +4,7 @@ addpath(genpath('stlwrite/'))
 addpath(genpath('smoothpatch_version1b/'))
 
 global n_circ;
-n_circ = 15;
+n_circ = 20;
 %% 1. Artery setup
 arteryObj = Artery('test_artery.stl','test_path1.pth', 'test_path2.pth');
 
@@ -23,11 +23,11 @@ draw_stenoses(arteryObj.opening);
 % set stent lenghts automatically
 
 % create initial stent
-[stentInitial, stent_radii] = initial_stent_from_final(arteryObj);
+[stentInitial] = initial_stent_from_final(arteryObj);
 stentInitial = set_stent_artery_radii(arteryObj, stentInitial);
 
 % draw artery and inital stent
-f=draw_artery_stents(arteryObj, (stentInitial));
+f1=draw_artery_real_stents(arteryObj, (stentInitial));
 %saveas(f,'images/03_InitialArtStent.png')
 
 % draw artery and final stent
@@ -36,16 +36,25 @@ f=draw_artery_stents(arteryObj, (stentInitial));
 
 %% 3. Intervention
 % create expanded artery
-[arteryObj_new, stentExp] =  expansion_artery( arteryObj,stentInitial, stent_radii,1);%expansion_artery_video( arteryObj,stentInitial, stent_radii,0.6);
+%[arteryObj_new, stentExp] =  expansion_artery( arteryObj,stentInitial, arteryObj.final_radii,1,0);%expansion_artery_video( arteryObj,stentInitial, stent_radii,0.6);
+[arteryObj_new, stentExp] =  expansion_artery( arteryObj,stentInitial, arteryObj.final_radii,1);%expansion_artery_video( arteryObj,stentInitial, stent_radii,0.6);
+
 %a = arteryObj_new.vertices;
-arteryObj_new=smoothpatch(arteryObj_new,1,1,0.5,1);    
+    
 %distance = norm(a-arteryObj_new.vertices)
 
-% draw expanded artery
-f=draw_artery(arteryObj_new);
-%saveas(f,'images/05_ExpandArt.png')
-
 % draw expanded artery and stent
+arteryObj_new=smoothpatch(arteryObj_new,1,1,0.5,1);
 figure
 f1 = draw_artery_real_stents(arteryObj_new, stentExp);
 %saveas(f,'images/06_ExpandArtStent.png')
+
+% figure
+% hold on
+% for i =1:3  
+%     scatter3(arteryObj.vertices(arteryObj.centerline(i).index_artery_to_center(arteryObj.centerline(i).index_artery_to_center~=0),1),arteryObj.vertices(arteryObj.centerline(i).index_artery_to_center(arteryObj.centerline(i).index_artery_to_center~=0),2),arteryObj.vertices(arteryObj.centerline(i).index_artery_to_center(arteryObj.centerline(i).index_artery_to_center~=0),3));
+% end
+
+
+%TODO: include if initial stent is longer than centerline -> extrapolate
+%centerline 
