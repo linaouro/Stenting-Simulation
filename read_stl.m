@@ -49,7 +49,7 @@ while feof(fid) == 0                    % test for end of file, if not then do s
        vnum = vnum + 1;                % If a V we count the # of V's
        report_num = report_num + 1;    % Report a counter, so long files show status
        if report_num > 249;
-           fprintf('Reading vertix num: %d.\n',vnum);
+           %fprintf('Reading vertix num: %d.\n',vnum);
            report_num = 0;
        end
        v(:,vnum) = sscanf(tline, '%*s %f %f %f'); % & if a V, get the XYZ data of it.
