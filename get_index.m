@@ -11,5 +11,7 @@ n = max(occ);
 
 index = zeros(size_spline,n);
 for i =1:size(index_closest,1)
-    index(index_closest(i,1),1+sum(index(index_closest(i,1),:)~=0))= i;
+    if index_closest(i,1) ~=0
+        index(index_closest(i,1),1+sum(index(index_closest(i,1),:)~=0))= i;
+    end
 end;
