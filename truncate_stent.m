@@ -33,6 +33,7 @@ tagsNew(logicalRemoveVertices) = nan; % place nans at loctions that shouldn't be
 %% Delete vertices, radii, centerline points with coords etc
 stentObj.vertices(logicalRemoveVertices,:) = []; 
 stentObj.radius(logicalRemoveVertices,:) = []; 
+stentObj.radius_avg = mean(stentObj.radius);
 stentObj.radius_artery(logicalRemoveVertices,:) = []; 
 stentObj.centerline.index_stent_to_center(index:end,:)=[];
 stentObj.centerline.coords(index:end,:)=[];
