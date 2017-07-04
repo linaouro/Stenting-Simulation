@@ -5,7 +5,7 @@ idx = [1,448; 449, 1368; 1369, 2293; 2294, 3221; 3222, 4149; 4150, 5076; 5077, 6
 
 for j = 1:3
     stent_V_new = stentObj(j).vertices_real;
-    idx_center = round(idx(:,2)/7380 *stentObj(j).centerline.len);
+    idx_center = round(linspace(1,stentObj(j).centerline.len,9));%round(idx(:,2)/7380 *stentObj(j).centerline.len);
     for i =1:9
         stent_V_new(idx(i,1):idx(i,2),2) = stent_V_new(idx(i,1):idx(i,2),2)-mean(stent_V_new(idx(i,1):idx(i,2),2));
         lx = stent_V_new(idx(i,1):idx(i,2),1);%*stentObj(j).radius_avg;
